@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PropertyFormRequest;
+use App\Models\Option;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Faker\Factory as Faker;
@@ -31,7 +32,7 @@ class PropertyController extends Controller
         $property = new Property();
         $property->fill([
             'title' => $faker->words(3, true), // Génère un titre de trois mots
-            'description' => $faker->sentence(10), // Génère une phrase aléatoire
+            'description' => $faker->sentence(50), // Génère une phrase aléatoire
             'surface' => $faker->numberBetween(20, 200), // Surface entre 20 et 200
             'rooms' => $faker->numberBetween(1, 10), // Entre 1 et 10 pièces
             'bedrooms' => $faker->numberBetween(0, 5), // Entre 0 et 5 chambres
@@ -43,7 +44,8 @@ class PropertyController extends Controller
             'sold' => $faker->boolean, // Statut aléatoire (vendu ou non)
         ]);
         return view('admin.properties.form', [
-            'property' => $property
+            'property' => $property,
+            'options' => Option::pluck('name', 'id'),
         ]);
     }
 
@@ -52,8 +54,9 @@ class PropertyController extends Controller
      */
     public function store(PropertyFormRequest $request)
     {
-        //dd($request->all()); // Arrêter l'exécution et afficher les données du formulaire
         $property = Property::create($request->validated());
+        $options = $request->input('options', []); // Récupère les options sélectionnées
+        $property->options()->sync($options); // Synchronise les options
         return to_route('admin.property.index')->with('success', 'Le bien a bien été crée ! :)');
     }
 
@@ -64,7 +67,8 @@ class PropertyController extends Controller
     public function edit(Property $property)
     {
         return view('admin.properties.form', [
-            'property' => $property
+            'property' => $property,
+            'options' => Option::pluck('name', 'id')
         ]);
     }
 
@@ -74,8 +78,11 @@ class PropertyController extends Controller
     public function update(PropertyFormRequest $request, Property $property)
     {
         $property->update($request->validated());
+        $options = $request->input('options', []); // Récupère les options sélectionnées
+        $property->options()->sync($options); // Synchronise les options
         return to_route('admin.property.index')->with('success', 'Le bien a bien été modifié ! :)');
     }
+
 
     /**
      * Remove the specified resource from storage.

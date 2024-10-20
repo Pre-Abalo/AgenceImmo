@@ -6,17 +6,6 @@
 
     <h1 class="text-6xl">@yield('title')</h1>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-
     <form class="vstack gap-2 mt-5" action="{{ route($property->exists ? 'admin.property.update' : 'admin.property.store', $property->exists ? ['property' => $property] : []) }}" method="post">
     @csrf
         @method($property->exists ? 'put' : 'post')
@@ -38,7 +27,8 @@
         @include('shared.input', ['class' => 'col', 'name' => 'city', 'label' => 'Ville', 'value' => $property->city])
         @include('shared.input', ['class' => 'col', 'name' => 'postal_code', 'label' =>'Code Postal', 'value' => $property->postal_code])
         </div>
-        @include('shared.checkbox', ['name' => 'sold', 'label' => 'Vendu', 'value' => $property->sold])
+        @include('shared.select', ['name' => 'options', 'label' => 'Options', 'value' => $property->options()->pluck('id')->toArray(), 'multiple' => true, 'options' => $options])
+        @include('shared.checkbox', ['name' => 'sold', 'label' => 'Vendu', 'value' => $property->sold, 'options' => $options])
         <div>
             <button class="btn btn-primary">
                 @if($property->exists)
