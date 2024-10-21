@@ -17,22 +17,23 @@
         <h4 class="text-3xl">Interresé par ce bien ?</h4>
     </div>
 
-    <form action="" method="post" class="vstack gap-2">
+    @include('shared.flash')
+
+    <form action="{{ route('property.contact', $property) }}" method="post" class="vstack gap-2">
         @csrf
         <div class="row">
-            @include('shared.input', ['class' => 'col', 'name' => 'firstname', 'label' => 'Prénom'])
-            @include('shared.input', ['class' => 'col', 'name' => 'lastname', 'label' => 'Nom'])
+            @include('shared.input', ['class' => 'col', 'name' => 'firstname', 'label' => 'Prénom', 'value' => $fakerData['firstname']])
+            @include('shared.input', ['class' => 'col', 'name' => 'lastname', 'label' => 'Nom', 'value' => $fakerData['lastname']])
         </div>
         <div class="row">
-            @include('shared.input', ['type' => 'number', 'class' => 'col', 'name' => 'phone', 'label' => 'Téléphone'])
-            @include('shared.input', ['type' => 'email', 'class' => 'col', 'name' => 'email', 'label' => 'Email'])
+            @include('shared.input', ['type' => 'number', 'class' => 'col', 'name' => 'phone', 'label' => 'Téléphone', 'value' => $fakerData['phone']])
+            @include('shared.input', ['type' => 'email', 'class' => 'col', 'name' => 'email', 'label' => 'Email', 'value' => $fakerData['email']])
         </div>
-        @include('shared.input', ['type' => 'textarea', 'class' => 'col', 'name' => 'message', 'label' => 'Votre message'])
+        @include('shared.input', ['type' => 'textarea', 'class' => 'col', 'name' => 'message', 'label' => 'Votre message', 'value' => $fakerData['message']])
 
         <div>
             <button class="btn btn-primary">Nous contacter</button>
         </div>
-
     </form>
 </div>
 <div class="container">

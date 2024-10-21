@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PropertyContactRequest;
 use App\Http\Requests\SearchPropertiesRequest;
+use App\Mail\PropertyContactMail;
 use App\Models\Property;
+use Faker\Factory as Faker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PropertyController extends Controller
 {
@@ -37,11 +41,28 @@ class PropertyController extends Controller
     public function show(string $slug, Property $property)
     {
         $expectedSlug = $property->getSlug();
-        if ($slug != $expectedSlug){
+        if ($slug != $expectedSlug) {
             return to_route('property.show', ['slug' => $expectedSlug, 'property' => $property]);
         }
+
+        // Utilisation de Faker
+        $faker = Faker::create();
+
         return view('property.show', [
-           'property' => $property
+            'property' => $property,
+            'fakerData' => [
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'phone' => $faker->phoneNumber,
+                'email' => $faker->email,
+                'message' => $faker->sentence(20)
+            ]
         ]);
+    }
+
+    public function contact(Property $property, PropertyContactRequest $request)
+    {
+        Mail::send(new PropertyContactMail($property, $request->validated()));
+        return back()->with('success', 'Le mail deee demande de contact à bien été envoyé :)');
     }
 }
