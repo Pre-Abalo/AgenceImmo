@@ -7,6 +7,11 @@
     <p class="card-text">{{ $property->surface }}m&sup2; - {{ $property->city }} (BP: {{ $property->postal_code }})</p>
     <p class="card-text">{{ $property->surface }}m&sup2; - {{ $property->city }} (BP: {{ $property->postal_code }})</p>
     <div class="text-primary fw-bold text-2xl ">
-        {{ number_format($property->price, thousands_separator: ' ') }} €
+        @if($property->sold === 1)
+            <span class="line-through">{{ number_format($property->price, thousands_separator: ' ') }} €</span>
+            <span class="text-danger me-0">sale</span>
+        @else
+            {{ number_format($property->price, thousands_separator: ' ') }} €
+        @endif
     </div>
 </div>
