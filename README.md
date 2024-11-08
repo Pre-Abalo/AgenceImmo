@@ -41,7 +41,7 @@ The project uses the **Faker** library to generate random test data, making test
 
 1. **Clone the GitHub Repository**:
    ```bash
-   git clone https://github.com/your-username/repository-name.git
+   git clone https://github.com/Pre-Abalo/AgenceImmo.git
    cd repository-name
    ```
 
